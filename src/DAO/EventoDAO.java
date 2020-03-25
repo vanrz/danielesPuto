@@ -73,7 +73,7 @@ public class EventoDAO {
 //here
     public ArrayList<String[]> mostrarEventos2() throws CaException {
         try {
-            String stringSQL = "SELECT n_nombre,n_lugar, k_idtipo, v_copago,f_inicio, f_cierre, v_total FROM \"Evento\", \"Caracteristica\"";
+            String stringSQL = "SELECT \"Evento\".k_evento, n_nombre,n_lugar, k_idtipo, i_estado,v_copago,f_inicio, f_cierre, v_total FROM \"Evento\", \"Caracteristica\"";
             Connection conex = ServiceLocator.getInstance().tomarConexion();//conexion
             PreparedStatement prepSta = conex.prepareStatement(stringSQL);//prepara la busqueda del sql
 
@@ -81,14 +81,17 @@ public class EventoDAO {
             int aux = 0;
             ArrayList<String[]> eventos = new ArrayList<>();
             while (resultado.next()) {
-                eventos.add(new String[7]);
-                eventos.get(aux)[0] = resultado.getString(1);
+                eventos.add(new String[9]);
+                
+                eventos.get(aux)[0] = ""+resultado.getInt(1);
                 eventos.get(aux)[1] = resultado.getString(2);
-                eventos.get(aux)[2] = ""+resultado.getInt(3);
+                eventos.get(aux)[2] = resultado.getString(3);
                 eventos.get(aux)[3] = ""+resultado.getInt(4);
                 eventos.get(aux)[4] = resultado.getString(5);
-                eventos.get(aux)[5] = resultado.getString(6);
+                eventos.get(aux)[5] = ""+resultado.getInt(6);
                 eventos.get(aux)[6] = resultado.getString(7);
+                eventos.get(aux)[7] = resultado.getString(8);
+                eventos.get(aux)[8] = ""+resultado.getInt(9);
                 aux++;
             }
             
@@ -211,23 +214,26 @@ public class EventoDAO {
         }
     }
 
-    public void borrarEvento() throws CaException {
+    public void ActualizarEvento() throws CaException {
+
         try {
-            String stringSQL = "DELETE FROM Evento WHERE k_evento= ?";//busqueda en sql
+            String stringSQL = "UPDATE \"Evento\" SET i_estado= 'culminado' WHERE k_evento= ? ";
             Connection conex = ServiceLocator.getInstance().tomarConexion();//conexion
-            PreparedStatement prepSta = conex.prepareStatement(stringSQL);//prepara la busqueda del sql
-
+            PreparedStatement prepSta = conex.prepareStatement(stringSQL);
+            
+            
             prepSta.setInt(1, evt.getK_evento());
-
+            
             prepSta.executeUpdate();
             prepSta.close();
-
             ServiceLocator.getInstance().commit();
-        } catch (SQLException e) {
-            throw new CaException("EventoDAO", "No se eliminó el evento" + e.getMessage());
+            
+        }catch (SQLException e) {
+            throw new CaException("EventoDAO", "No se actualizo el estado del evento" + e.getMessage());
         } finally {
             ServiceLocator.getInstance().liberarConexion();
         }
     }
+
 
 }

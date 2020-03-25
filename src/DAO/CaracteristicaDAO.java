@@ -26,12 +26,12 @@ public class CaracteristicaDAO {
     
     public void buscarCaracteristica() throws CaException {
         try {
-            String stringSQL = "SELECT * FROM Caracteristica WHERE k_evento = ?";//busqueda en sql
+            String stringSQL = "SELECT * FROM \"Caracteristica\" WHERE k_evento = ?";//busqueda en sql
             Connection conex = ServiceLocator.getInstance().tomarConexion();//conexion
             PreparedStatement prepSta = conex.prepareStatement(stringSQL);//prepara la busqueda del sql
 
             prepSta.setInt(1, car.getK_evento());//reemplaza el interrogante por el valor
-
+            car.setK_evento(-1);
             ResultSet resultado = prepSta.executeQuery();//ejecuta el query y guarda el resultado
 
             while (resultado.next()) {
@@ -74,6 +74,25 @@ public class CaracteristicaDAO {
         }
 
     }
+    public void borrarCaracteristica() throws CaException {
+        try {
+            String stringSQL = "DELETE FROM \"Caracteristica\" WHERE k_evento= ?";//busqueda en sql
+            Connection conex = ServiceLocator.getInstance().tomarConexion();//conexion
+            PreparedStatement prepSta = conex.prepareStatement(stringSQL);//prepara la busqueda del sql
+
+            prepSta.setInt(1, car.getK_evento());
+
+            prepSta.executeUpdate();
+            prepSta.close();
+
+            ServiceLocator.getInstance().commit();
+        } catch (SQLException e) {
+            throw new CaException("CaracteristicaDAO", "No se eliminó el copago" + e.getMessage());
+        } finally {
+            ServiceLocator.getInstance().liberarConexion();
+        }
+    }
+
 
     public Caracteristica getCar() {
         return car;

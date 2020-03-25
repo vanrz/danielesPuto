@@ -101,7 +101,7 @@ public class ConsultaEvento extends javax.swing.JFrame {
 
             },
             new String [] {
-                "Nombre", "Lugar", "Tipo", "Estado", "Copago", "Fecha inicio", "Fecha Cierre", "Valor", "Participantes"
+                "ID", "Nombre", "Lugar", "Tipo", "Estado", "Copago", "Fecha inicio", "Fecha Cierre", "Valor"
             }
         ) {
             boolean[] canEdit = new boolean [] {
@@ -166,6 +166,12 @@ public class ConsultaEvento extends javax.swing.JFrame {
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         // TODO add your handling code here:
+        CancelarEvento borrar=new CancelarEvento();
+        
+        borrar.setVisible(true);
+        dispose();
+        
+        
         
         
     }//GEN-LAST:event_jButton3ActionPerformed
